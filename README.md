@@ -24,10 +24,27 @@ Assim que estiver publicado eu anexo
 - JPA / Hibernate
 - Maven
 
-## Implantação em produção
+## Implantação
 - Back end: Heroku
 - Banco de dados: Postgresql
 
+
+# Como executar o projeto
+
+## Back end
+Pré-requisitos: Java 11
+
+```bash
+# clonar repositório
+git@github.com:BotRajj/workshop-springboot3-jpa.git
+
+# entrar na pasta do projeto back end
+cd backend
+
+# executar o projeto
+
+```
+ 
 # Autor
 
 Vitor Silva Machado
