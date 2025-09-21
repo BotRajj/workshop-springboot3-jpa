@@ -3,9 +3,9 @@
 
 # Sobre o projeto
 
-Esse é uma projeto web services, com Spring Boot e JPA/Hibernate construída em um dos cusros do professor Dr.Nelio Alves [DevSuperior](https://devsuperior.com "Site da DevSuperior").
+Ainda em andamento. Esse é uma projeto web services, com Spring Boot e JPA/Hibernate construída em um dos cusros do professor Dr.Nelio Alves [DevSuperior](https://devsuperior.com "Site da DevSuperior").
 
-O projeto consiste na implementação alguns recursos Back End de um site vendas.
+O projeto consiste na implementação de alguns recursos Back End em um site vendas.
 
 # Objetivos
 - Criar projeto Spring Boot Java
@@ -31,13 +31,48 @@ O projeto consiste na implementação alguns recursos Back End de um site vendas
 - PostgreSQL
 - Postman
 
+# Detalhes do código
+
+Na criação de entidades e recursos, segui os seguintes passos:
+  - Atributos básicos, Ex.: Id, Nome.
+  - Associações (instanciando as coleções)
+  - Construtores
+  - Getters & Setters (Coleções: somente o get)
+  - hashCode & equals
+  - Serializable
+
+No arquivo TestConfig na pasta Config, está o povoamento do banco de dados.
+
+Para a camada de repositórios apenas extendi o org.springframework.data.jpa.repository.JpaRepository para cada serviço e a classe OrdemItem.
+
+Quem irá ter acesso ao repositório e manter a lógica de negócio é a camada de serviço, que por sua vez é chamada na camada de recursos. Os recursos recebem a solicitação, enviam pra camada de serviço que processa ou envia para o repositório, que então o resultado é retornado para a camada de recursos e enviada de volta para a requisição.
+
+# Tratamento de exceções
+
+# Como executar o projeto
+
+## Pré-requisitos
+- Java 17
+- Porsgresql
+- Postman
+- IDE
+
+```bash
+# clonar repositório
+git clone git@github.com:BotRajj/workshop-springboot3-jpa.git
+```
+
 # Profiles
 
-O projeto conta com três profiles, que pode ser alterados no arquivo application.properties no campo spring.profiles.active= test/prod/dev:
+A aplicação conta com três profiles, que podem ser alterados no arquivo application.properties, campo:
 
-- Test
+```bash
+spring.profiles.active= test/prod/dev
+```
 
-Para testes, utilizando o banco de dados H2, que não persiste os dados após a interrução. No seu projeto, para visualizar o banco de dados, seguimos para o caminho no navegador http://localhost:8080/h2-console, os campos devem ser preenchidos de acordo com o arquivo application-test.properties.
+## Test
+
+Utilizei o banco de dados H2, que não persiste os dados após a interrução da aplicação. A vizualição do banco de dados só é possível após a execução da aplicação e no caminho no navegador http://localhost:8080/h2-console. Os campos que aparecerão devem ser preenchidos de acordo com o arquivo application-test.properties.
 
 ```bash
 spring.datasource.url=jdbc:h2:mem:testdb
@@ -45,9 +80,9 @@ spring.datasource.username=sa
 spring.datasource.password=
 ```
 
-- Dev
+## Dev
 
-
+Com o banco de dados Postgresql, os dados persistem após a interrupção da aplicação. Antes da execução, crie um database no Postgresql com o nome "spring-jpa-course". Altere os campos username e password no arquivo application-dev.properties de acordo com os do seu Postgresql.
 
 ```bash
 spring.datasource.url=jdbc:postgresql://localhost:5432/spring-jpa-course
@@ -55,36 +90,58 @@ spring.datasource.username=postgres
 spring.datasource.password=12345678
 ```
 
-- Prod
-  
-# Como executar o projeto
+## Prod
 
-## Back end
-- Java 17
-- Porsgresql
-- Postman
+Já na implementação Heroku, uma hospedagem paga que os dados serão enviados para um deploy online e ficaram disponível até o final do plano, você precisa criar um app na plataforma e adicionar no dashbord o Postgres.
 
-```bash
-# clonar repositório
-git@github.com:BotRajj/workshop-springboot3-jpa.git
-```
+- Faça o login no Heroku
+- Crie o app, na opção new -> create app
+- Provisionando PostgreSQL
+    - App dashboard -> Resources
+    - Procure "postgres" -> Selecione "Heroku Postgres"
 
-Executando o projeto em sua IDE seguimmos para os End Points no Postman
+
+Após isso, basta seguir os passos na aba deploy do seu app. Ao final será disponibilizado um link para as requisições.
  
-## End points:   
+# End points:   
 
-Utilize os seguintes caminhos de acordo com o profile:
-- prod: https://coure-javasb3-e46136a3d1e0.herokuapp.com
-- test/dev: http://localhost:8080
+Esse projeto já está implementada online no Heroku, já sendo possível fazer as requisições com o caminho:
+- https://coure-javasb3-e46136a3d1e0.herokuapp.com
+Ou utilize o caminho da sua implementação, caso já tenha.
 
-#### /Users
-Para inserção de usuários, utilizamos o método Post e no Body, subaba raw, formato JSON, enviamos os seguintes campos para inserção. 
+E para execução local, os profile test e dev temos o caminho padrão:
+- http://localhost:8080
+
+## /Users, /Product, /Order, /Category
+Para consulta de todos, com o método GET.
+
+## /Users/Id, /Product/Id, /Order/Id, Category/Id
+Para consulta de um Id específico, com o método GET.
+
+## /Users
+Para inserção de usuários, com o método POST e no Body, subaba raw, formato JSON, enviamos os seguintes campos para inserção.  Nessa requisição o esperado é o 201 Created, indicando que foi criado com sucesso. 
 ```bash
 {
 "name": "Nome",
 "email": "Email@email.com",
 "phone": "1234-1234",
 "password": "Senha"
+}
+```
+
+## /Users/Id
+Para deletação de usuários, com o método DELETE, no final do caminho da requisição é necessário informa o Id. Nessa requisição o esperado são os retornos:
+- 204 No Content, indicando que foi possível a deleção do usuário.
+- 500 para o usuário que tem pedidos, não sendo possível a deleção por conta da integridade referencial.
+  
+## /Users
+Para atualização de usuários, com o método PUT e no Body, subaba raw, formato JSON, enviamos os seguintes campos para atualização. Nessa requisição o esperado é o 200 OK, onde foi possível a atualização do usuário.
+
+```bash
+{
+"name": "Nome",
+"email": "Email@email.com",
+"phone": "1234-1234"
 }
 ```
 
