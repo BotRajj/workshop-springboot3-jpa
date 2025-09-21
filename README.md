@@ -5,7 +5,7 @@
 
 Ainda em andamento. Esse é uma projeto web services, com Spring Boot e JPA/Hibernate construída em um dos cusros do professor Dr.Nelio Alves [DevSuperior](https://devsuperior.com "Site da DevSuperior").
 
-O projeto consiste na implementação de alguns recursos Back End em um site vendas.
+O projeto consiste na implementação de algumas etapas Back End em um site vendas.
 
 # Objetivos
 - Criar projeto Spring Boot Java
@@ -21,8 +21,7 @@ O projeto consiste na implementação de alguns recursos Back End em um site ven
 ![Instancia de dominio](https://github.com/BotRajj/assets/blob/main/JSBJH/InstanciaDeDominio.jpeg)
 ![Instancia de dominio](https://github.com/BotRajj/assets/blob/main/JSBJH/CamadasL%C3%B3gicas.jpeg)
 
-# Tecnologias utilizadas
-## Back end
+# Tecnologias Back end utilizadas
 - Java
 - Spring Boot
 - JPA / Hibernate
@@ -45,9 +44,7 @@ No arquivo TestConfig na pasta Config, está o povoamento do banco de dados.
 
 Para a camada de repositórios apenas extendi o org.springframework.data.jpa.repository.JpaRepository para cada serviço e a classe OrdemItem.
 
-Quem irá ter acesso ao repositório e manter a lógica de negócio é a camada de serviço, que por sua vez é chamada na camada de recursos. Os recursos recebem a solicitação, enviam pra camada de serviço que processa ou envia para o repositório, que então o resultado é retornado para a camada de recursos e enviada de volta para a requisição.
-
-# Tratamento de exceções
+Quem irá ter acesso ao repositório e manter a lógica de negócio é a camada de serviço, que por sua vez é chamada na camada de recursos. Os recursos recebem a requisição, enviam pra camada de serviço que processa ou envia para o repositório, que então o resultado é retornado para a camada de recursos e enviada de volta para a aplicação.
 
 # Como executar o projeto
 
@@ -64,7 +61,7 @@ git clone git@github.com:BotRajj/workshop-springboot3-jpa.git
 
 # Profiles
 
-A aplicação conta com três profiles, que podem ser alterados no arquivo application.properties, campo:
+A aplicação conta com três profiles, test, prod e dev, que podem ser alterados no arquivo application.properties, campo:
 
 ```bash
 spring.profiles.active= test/prod/dev
@@ -105,20 +102,41 @@ Após isso, basta seguir os passos na aba deploy do seu app. Ao final será disp
  
 # End points:   
 
-Esse projeto já está implementada online no Heroku, já sendo possível fazer as requisições com o caminho:
+Utilizando o Postman, seguimos para as requisições.
+
+Esse projeto já está implementado no Heroku, sendo possível fazer as requisições com o caminho:
 - https://coure-javasb3-e46136a3d1e0.herokuapp.com
+
+Exemplo:  https://coure-javasb3-e46136a3d1e0.herokuapp.com/endpoint
+
 Ou utilize o caminho da sua implementação, caso já tenha.
 
-E para execução local, os profile test e dev temos o caminho padrão:
+E para execução local, os profile test e dev utiliza o caminho padrão:
 - http://localhost:8080
 
-## /Users, /Product, /Order, /Category
-Para consulta de todos, com o método GET.
+Exemplo:  http://localhost:8080/endpoint
 
-## /Users/Id, /Product/Id, /Order/Id, Category/Id
-Para consulta de um Id específico, com o método GET.
+## Retornando todos os recursos.
+### /users, /product, /order, /category
 
-## /Users
+Enviando com o método GET, essa requisição retorna todos os recurso de cada.
+
+## Retornando um recurso específico
+### /users/id, /product/id, /order/id, category/id
+
+Enviando com o método GET, essa requisição retorna apenas um recurso espeficicado. 
+
+No caso do recurso não encontrado, o tratamento de exceções irá retorna 404 - Not found, a mensagem "Resource not found. Id + id" e um objeto de exceção manualmente tratado.
+
+Classes envolvidas no tratamento de exceções
+- NEW CLASS: services.exceptions.ResourceNotFoundException
+- NEW CLASS: resources.exceptions.StandardError
+- NEW CLASS: resources.exceptions.ResourceExceptionHandler
+- ClasseServiceDoRecurso
+
+## Criando um recurso
+###/Users
+
 Para inserção de usuários, com o método POST e no Body, subaba raw, formato JSON, enviamos os seguintes campos para inserção.  Nessa requisição o esperado é o 201 Created, indicando que foi criado com sucesso. 
 ```bash
 {
@@ -129,12 +147,28 @@ Para inserção de usuários, com o método POST e no Body, subaba raw, formato 
 }
 ```
 
-## /Users/Id
-Para deletação de usuários, com o método DELETE, no final do caminho da requisição é necessário informa o Id. Nessa requisição o esperado são os retornos:
+Será implementada a criação dos demais recursos.
+
+## Deletando um recurso
+###/Users/Id
+
+Para deletação de usuários, com o método DELETE, essa requisição irá deletar o usuário espeficiado. Nessa requisição o esperado são os retornos:
 - 204 No Content, indicando que foi possível a deleção do usuário.
-- 500 para o usuário que tem pedidos, não sendo possível a deleção por conta da integridade referencial.
+- 400 Bad Request, não sendo possível a deleção por conta da integridade referencial ou outro problema.
+
+No caso do recurso não encontrado, o tratamento de exceções irá retorna 404 - Not found e um objeto de exceção manualmente tratado.
+
+Classes envolvidas
+- NEW CLASS: services.exceptions.DatabaseException
+- ResourceExceptionHandler
+- UserService
+  - EmptyResultDataAccessException
+  - DataIntegrityViolationException
   
-## /Users
+Será implementada a deleção dos demais recursos.
+
+## Atualizando um recurso
+/Users
 Para atualização de usuários, com o método PUT e no Body, subaba raw, formato JSON, enviamos os seguintes campos para atualização. Nessa requisição o esperado é o 200 OK, onde foi possível a atualização do usuário.
 
 ```bash
@@ -144,6 +178,13 @@ Para atualização de usuários, com o método PUT e no Body, subaba raw, format
 "phone": "1234-1234"
 }
 ```
+No caso do recurso não encontrado, o tratamento de exceções irá retorna 404 - Not found e um objeto de exceção manualmente tratado. 
+
+Classes envolvidas
+- UserService
+- UserResource
+  
+Será implementada a atualização dos demais recursos.
 
 # Autor
 
