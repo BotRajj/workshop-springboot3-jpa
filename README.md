@@ -3,15 +3,19 @@
 
 # Sobre o projeto
 
-Assim que estiver promto e publicado eu anexo o link
+Esse é uma projeto web services, com Spring Boot e JPA/Hibernate construída em um dos cusros do professor Dr.Nelio Alves [DevSuperior](https://devsuperior.com "Site da DevSuperior").
 
-Esse é uma projeto web services, ainda em desenvolvimento, com Spring Boot e JPA/Hibernate construída em um dos cusros do professor Dr.Nelio Alves [DevSuperior](https://devsuperior.com "Site da DevSuperior").
+O projeto consiste na implementação alguns recursos Back End de um site vendas.
 
-O projeto consiste na implementação back end de uma parte da etapa de vendas em um site na internet. 
-
-## Layout web
-Assim que estiver publicado eu anexo
-
+# Objetivos
+- Criar projeto Spring Boot Java
+- Implementar modelo de domínio
+- Estruturar camadas lógicas: resource, service, repository
+- Configurar banco de dados
+- Povoar o banco de dados
+- CRUD - Create, Retrieve, Update, Delete
+- Tratamento de exceções
+  
 ## Modelo conceitual
 ![Modelo Conceitual](https://github.com/BotRajj/assets/blob/main/JSBJH/ModeloConceitual.jpeg)
 ![Instancia de dominio](https://github.com/BotRajj/assets/blob/main/JSBJH/InstanciaDeDominio.jpeg)
@@ -23,28 +27,67 @@ Assim que estiver publicado eu anexo
 - Spring Boot
 - JPA / Hibernate
 - Maven
+- Hekoku
+- PostgreSQL
+- Postman
 
-## Implantação
-- Back end: Heroku
-- Banco de dados: Postgresql
+# Profiles
+
+O projeto conta com três profiles, que pode ser alterados no arquivo application.properties no campo spring.profiles.active= test/prod/dev:
+
+- Test
+
+Para testes, utilizando o banco de dados H2, que não persiste os dados após a interrução. No seu projeto, para visualizar o banco de dados, seguimos para o caminho no navegador http://localhost:8080/h2-console, os campos devem ser preenchidos de acordo com o arquivo application-test.properties.
+
+```bash
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.username=sa
+spring.datasource.password=
+```
+
+- Dev
 
 
+
+```bash
+spring.datasource.url=jdbc:postgresql://localhost:5432/spring-jpa-course
+spring.datasource.username=postgres
+spring.datasource.password=12345678
+```
+
+- Prod
+  
 # Como executar o projeto
 
 ## Back end
-Pré-requisitos: Java 11
+- Java 17
+- Porsgresql
+- Postman
 
 ```bash
 # clonar repositório
 git@github.com:BotRajj/workshop-springboot3-jpa.git
-
-# entrar na pasta do projeto back end
-cd backend
-
-# executar o projeto
-
 ```
+
+Executando o projeto em sua IDE seguimmos para os End Points no Postman
  
+## End points:   
+
+Utilize os seguintes caminhos de acordo com o profile:
+- prod: https://coure-javasb3-e46136a3d1e0.herokuapp.com
+- test/dev: http://localhost:8080
+
+#### /Users
+Para inserção de usuários, utilizamos o método Post e no Body, subaba raw, formato JSON, enviamos os seguintes campos para inserção. 
+```bash
+{
+"name": "Nome",
+"email": "Email@email.com",
+"phone": "1234-1234",
+"password": "Senha"
+}
+```
+
 # Autor
 
 Vitor Silva Machado
