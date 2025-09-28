@@ -129,9 +129,9 @@ Enviando com o método GET, essa requisição retorna apenas um recurso espefici
 No caso do recurso não encontrado, o tratamento de exceções irá retorna 404 - Not found, a mensagem "Resource not found. Id + id" e um objeto de exceção manualmente tratado.
 
 Classes envolvidas no tratamento de exceções
-- NEW CLASS: services.exceptions.ResourceNotFoundException
-- NEW CLASS: resources.exceptions.StandardError
-- NEW CLASS: resources.exceptions.ResourceExceptionHandler
+- services.exceptions.ResourceNotFoundException
+- resources.exceptions.StandardError
+- resources.exceptions.ResourceExceptionHandler
 - ClasseServiceDoRecurso
 
 ## Criando um recurso
@@ -159,7 +159,7 @@ Para deletação de usuários, com o método DELETE, essa requisição irá dele
 No caso do recurso não encontrado, o tratamento de exceções irá retorna 404 - Not found e um objeto de exceção manualmente tratado.
 
 Classes envolvidas
-- NEW CLASS: services.exceptions.DatabaseException
+- services.exceptions.DatabaseException
 - ResourceExceptionHandler
 - UserService
   - EmptyResultDataAccessException
